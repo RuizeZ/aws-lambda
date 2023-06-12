@@ -1,8 +1,8 @@
 service: final-aws-node-todo
-frameworkVersion: '3'
+frameworkVersion: "3"
 
 custom:
-  tableName: 'users-table-${sls:stage}'
+  tableName: "users-table-${sls:stage}"
 
 provider:
   name: aws
@@ -19,7 +19,7 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
           Resource:
-            - Fn::GetAtt: [ UsersTable, Arn ]
+            - Fn::GetAtt: [UsersTable, Arn]
   environment:
     TODO_TABLE: ${self:custom.tableName}
 
@@ -44,6 +44,20 @@ functions:
       - http:
           path: todos/{userId}
           method: get
+          cors: true
+  delete:
+    handler: handler/deleteTodo.deleteTodo
+    events:
+      - http:
+          path: todos/delete/{userId}
+          method: delete
+          cors: true
+  update:
+    handler: handler/updateTodo.updateTodo
+    events:
+      - http:
+          path: todos/update/{userId}
+          method: put
           cors: true
 
 resources:
